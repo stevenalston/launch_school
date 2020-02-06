@@ -1,0 +1,10 @@
+---
+:enter_num: Enter a number
+:valid_num: hmmm... that doesn\'t look like a valid number
+:welcome: Welcome to the calculator. Enter your name -
+:valid_name: Make sure to enter a name
+:valid_op: Must choose 1, 2, 3, or 4
+:hello: Hello %{name}
+:result: The result is %{result}
+:perform_calc: Do you want to perform another calculation? (Y to continue)
+:goodbye: Thank you for using Calculator. Goodbye!
