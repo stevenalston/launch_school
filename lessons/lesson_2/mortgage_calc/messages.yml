@@ -1,0 +1,8 @@
+---
+:welcome: ============ Welcome to the Monthly Payment Calculator ============
+:reenter: Please enter valid %{amount}
+:loan: Enter the total loan amount
+:duration: Enter the duration of the loan
+:mpr: Enter the interest rate of the loan
+:again: Do you want to perform another calculation? (Y to continue)
+:bye: Goodbye. Thank you for using the Monthly Payment Calculator!

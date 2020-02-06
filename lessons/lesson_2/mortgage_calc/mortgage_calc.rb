@@ -29,18 +29,21 @@ WHILE calculation
     ELSE
       READ number not valid
 =end
-def valid_number?(num)
-  /\d/.match(num) && /\d*\.?\d$/.match(num)
+require 'yaml'
+MSG = YAML.load(File.read("messages.yml"))
+def valid_number?(obj)
+  obj = obj.to_s unless obj.is_a? String
+  /\A[+-]?\d+(\.[\d]+)?\z/.match obj
 end
 
-def gets_info(msg)
+def gets_info(msg, type)
   loop do
     puts "#{msg}"
     num = gets.chomp
     if valid_number?(num)
       return num
     else
-      puts 'Please enter a valid dollar amount'
+      puts format((MSG[:reenter]), type: "#{type}")
     end
   end
 end
@@ -52,15 +55,27 @@ def calc_payment(amt, mpr, dur)
   pymt
 end
 loop do
-  puts "=========== Car Payment Calculator ============"
-  amt= gets_info('Enter the Loan Amount: ')
-  mpr = calc_percentage(gets_info('Enter the Annual Percentage Rate'))
-  dur = gets_info("Enter the term/duration of the loan in months")
+  puts MSG[:welcome]
+  amt= gets_info(MSG[:loan], 'dollar')
+  mpr = calc_percentage(gets_info(MSG[:mpr], 'number'))
+  dur = gets_info(MSG[:duration], 'number')
+  puts <<-MSG
+  Enter term in Months or Years
+  m) Months
+  y) Years
+  MSG
+  term_type = gets.chomp
+  term_result = term_type.downcase == 'y' ? dur.to_i * 12 : dur
 
-  p "Monthly Payment: $#{calc_payment(amt, mpr, dur).round(2)}"
-  puts "Do you want to calculate another monthly payment?(Y to continue)"
+  3.times do
+    puts "calculating..."
+    sleep(1)
+  end
+
+  p "Monthly Payment: $#{calc_payment(amt, mpr, term_result).round(2)}"
+  puts MSG[:again]
   answer = gets.chomp
   break unless answer.downcase == 'y'
 end
 
-puts "Goodbye... Thank you for using the Car Payment Calculator!"
+puts MSG[:bye]
