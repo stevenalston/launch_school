@@ -74,7 +74,7 @@ end
 
 def make_uuid()
   str = ""
-  id_str = "1234567890abcdefghijklmnopqrstuvwxyz"
+  id_str = "1234567890abcdef"
   i = 0
   while i < 36
     if i == 8 || i == 13 || i == 18 || i == 23
@@ -88,3 +88,19 @@ def make_uuid()
 end
 
 p make_uuid
+
+# Launch School method
+def generate_UUID
+  characters = []
+  (0..9).each { |digit| characters << digit.to_s }
+  ('a'..'f').each { |digit| characters << digit }
+
+  uuid = ""
+  sections = [8, 4, 4, 4, 12]
+  sections.each_with_index do |section, index|
+    section.times { uuid += characters.sample }
+    uuid += '-' unless index >= sections.size - 1
+  end
+
+  uuid
+end

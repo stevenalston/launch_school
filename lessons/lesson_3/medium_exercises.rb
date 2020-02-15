@@ -21,5 +21,3 @@ def factors(number)
   # end
   factors
 end
-
-p factors(25)
