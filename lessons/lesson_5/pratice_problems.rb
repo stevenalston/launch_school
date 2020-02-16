@@ -48,7 +48,7 @@ end
 p total
 
 [[1, 6, 7], [1, 4, 9], [1, 8, 3]].sort_by do |sub_arr|
-  sub_arr.select {|el| el.odd?}
+  sub_arr.select(&:odd?)
 end
 
 hsh1 = {
@@ -61,14 +61,14 @@ hsh1 = {
 
 hsh1.each_with_object([]) do |(key, value), arr|
   arr << value[:size].upcase if value[:type] == 'vegetable'
-  arr << value[:colors].map {|color| color.capitalize} if value[:type] == 'fruit'
+  arr << value[:colors].map(&:capitalize) if value[:type] == 'fruit'
   arr
 end
 
 arr4 = [{a: [1, 2, 3]}, {b: [2, 4, 6], c: [3, 6], d: [4]}, {e: [8], f: [6, 10]}]
 arr4.select do |hsh|
   hsh.all? do |_, value|
-    value.all? {|el| el.even?}
+    value.all?(&:even?)
   end
 end
 
@@ -104,3 +104,5 @@ def generate_UUID
 
   uuid
 end
+
+p generate_UUID
