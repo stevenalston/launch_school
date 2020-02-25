@@ -57,24 +57,22 @@ def player_mark!(brd)
   brd[square] = PLAYER_MARKER
 end
 
-def defensive_move(brd)
+def strategic_move(brd, marker)
   square = nil
   WINNING_LINES.each do |line|
-    if brd.values_at(*line).count(PLAYER_MARKER) == 2
+    if brd.values_at(*line).count(marker) == 2
       square = brd.select { |key, val| line.include?(key) && val == INITIAL_MARKER}.keys.first
     end
   end
   square
 end
 
+def defensive_move(brd)
+  strategic_move(brd, PLAYER_MARKER)
+end
+
 def offensive_move(brd)
-  square = nil
-  WINNING_LINES.each do |line|
-    if brd.values_at(*line).count(COMPUTER_MARKER) == 2
-      square = brd.select { |key, val| line.include?(key) && val == INITIAL_MARKER}.keys.first
-    end
-  end
-  square
+  strategic_move(brd, COMPUTER_MARKER)
 end
 
 def center_move(brd)
