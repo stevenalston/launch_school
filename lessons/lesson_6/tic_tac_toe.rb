@@ -76,7 +76,7 @@ def offensive_move(brd)
 end
 
 def center_move(brd)
-  square = brd.select { |key, val| key == 5 && val == INITIAL_MARKER}.keys.first
+  square = brd.select { |key, val| key == 5 && val == INITIAL_MARKER }.keys.first
 end
 
 def computer_mark!(brd)
