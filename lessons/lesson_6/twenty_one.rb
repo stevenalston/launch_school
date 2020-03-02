@@ -1,7 +1,7 @@
 PLAYER = {
   name: "player",
   cards: [],
-  first_deal: true,
+  initial_deal: true,
   active: true,
   dealer: false
 }
@@ -9,7 +9,7 @@ PLAYER = {
 DEALER = {
   name: "dealer",
   cards: [],
-  first_deal: true,
+  initial_deal: true,
   active: false,
   dealer: true
 }
@@ -22,7 +22,9 @@ end
 
 def initialize_players
   users = []
-
+  users << PLAYER
+  users << DEALER
+  users
 end
 
 def initialize_deck(crds)
@@ -57,8 +59,17 @@ end
 
 def display_cards(users)
   users.each do |usr|
-    if usr[:name] == 'Dealer' && !usr[:active]
-      usr[:cards].each_with_index { |card, i| prompt("dealer has #{card} of #{i}") }
+    # if dealer is not active, then card 2 must be unknown
+    if !usr[:active]
+      card1, card2 = nil
+      usr[:cards].each_with_index do |card, i|
+        i < 1 ? card1 = card.values.first.first : card2 = 'unknown value'
+      end
+      prompt("Dealer has: #{card1} and #{card2}")
+    elsif usr[:active]
+      usr[:cards].each do |card|
+        card.values.each { |val| prompt("You have: #{val[0]} and #{val}")}
+      end
     end
   end
 end
@@ -67,12 +78,12 @@ def deal_cards(dck, users)
   users.each do |usr|
     if usr[:initial_deal]
       usr[:initial_deal]
-      select_card(dck, usr)
+      2.times { select_card(dck, usr) }
       usr[:initial_deal] = false
     elsif usr[:active]
       select_card(dck, usr)
     end
-    p usr
+    usr
   end
 end
 
