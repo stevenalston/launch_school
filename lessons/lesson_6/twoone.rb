@@ -140,7 +140,6 @@ def player_turn(dck, users)
       deal_card(dck, users)
       users[:player][:score] = calculate_score(users[:player][:cards])
       if busted?(users[:player]) || !users[:player][:active]
-        determine_winner(users)
         break
       end
     else
@@ -160,7 +159,6 @@ def dealer_turn(dck, users)
     elsif busted?(users[:dealer])
       break
     end
-    determine_winner(users)
     break
   end
 end
@@ -180,12 +178,14 @@ end
 # ==========================
 
 loop do
+  system 'clear'
   deck = initialize_deck
   players = initialize_users
   deal_card(deck, players)
   player_turn(deck, players)
+  determine_winner(players)
   break if busted?(players[:player])
   prompt 'Play again?(y/n)'
   answer = gets.chomp.downcase
-  break unless answer == 'y'
+  break unless answer.start_with?('y')
 end
