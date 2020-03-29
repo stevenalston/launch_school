@@ -12,7 +12,7 @@ WHILE calculation
     IF valid number
       break
     ELSE
-      READ number not valid
+      PRINT number not valid
   WHILE
     GET annual percentage rate
     SET apr
@@ -20,14 +20,14 @@ WHILE calculation
       convert to percentage
       break
     ELSE
-      READ number not valid
+      PRINT number not valid
   WHILE
     GET loan duration
     SET duration
     IF valid number
       break
     ELSE
-      READ number not valid
+      PRINT number not valid
 =end
 require 'yaml'
 MSG = YAML.load(File.read("messages.yml"))

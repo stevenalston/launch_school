@@ -30,11 +30,10 @@ end
 # randomly select a card from the deck
 def select_card(dck)
   # sample the deck array, returns a suit return the value obj and sample
-  card = dck.sample.each_with_object({}) do |suit, obj|
+  dck.sample.each_with_object({}) do |suit, obj|
     crd = suit[1].to_a.sample
     suit = suit[0]
     obj[suit] = { crd[0] => crd[1] }
-
     # remove card from deck
     dck = dck.each do |val|
       val.each do |k, v|
@@ -179,6 +178,7 @@ end
 
 loop do
   system 'clear'
+  puts '=============== WELCOME TO TWENTY ONE ================'
   deck = initialize_deck
   players = initialize_users
   deal_card(deck, players)

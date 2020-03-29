@@ -1,8 +1,6 @@
-# @!scope
-#
 a = 5
 def scope_test
-  6# undefined
+  a = 6
 end
 
 puts scope_test

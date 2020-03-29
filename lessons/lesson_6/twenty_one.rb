@@ -1,91 +1,161 @@
-PLAYER = {
-  name: "player",
-  cards: [],
-  initial_deal: true,
-  active: true,
-  dealer: false
-}
+# =======================
+#  LAUNCH-SCHOOL CODE
+# =======================
+SUITS = ['H', 'D', 'S', 'C']
+VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 
-DEALER = {
-  name: "dealer",
-  cards: [],
-  initial_deal: true,
-  active: false,
-  dealer: true
-}
-# ==========================
-#    METHODS
-# ==========================
 def prompt(msg)
   puts "=> #{msg}"
 end
 
-def initialize_players
-  users = []
-  users << PLAYER
-  users << DEALER
-  users
+def initialize_deck
+  SUITS.product(VALUES).shuffle
 end
 
-def initialize_deck(crds)
-  dck = []
-  [:❤, :◆, :♠︎, :♣].each_with_object({}) do |val, obj|
-    obj[val] = crds
-    dck << obj
-  end
-  dck
-end
+def total(cards)
+  # cards = [['H', '3'], ['S', 'Q'], ... ]
+  values = cards.map { |card| card[1] }
 
-def initialize_cards
-  cards = {}
-  (2..10).each { |num| cards[num] = num }
-  cards[:J] = 10
-  cards[:Q] = 10
-  cards[:K] = 10
-  cards[:A] = 11
-  cards
-end
-
-def select_card(dck, usr)
-  syms = []
-  vals = dck.each_with_object({}) do |suit, obj|
-    suit.each do |sym, val|
-      syms << sym
-      val.each { |k, v| obj[k] = v }
+  sum = 0
+  values.each do |value|
+    if value == "A"
+      sum += 11
+    elsif value.to_i == 0 # J, Q, K
+      sum += 10
+    else
+      sum += value.to_i
     end
   end
-  usr[:cards] << { syms.sample => vals.to_a.sample }
+
+  # correct for Aces
+  values.select { |value| value == "A" }.count.times do
+    sum -= 10 if sum > 21
+  end
+
+  sum
 end
 
-def display_cards(users)
-  users.each do |usr|
-    # if dealer is not active, then card 2 must be unknown
-    if !usr[:active]
-      card1, card2 = nil
-      usr[:cards].each_with_index do |card, i|
-        i < 1 ? card1 = card.values.first.first : card2 = 'unknown value'
-      end
-      prompt("Dealer has: #{card1} and #{card2}")
-    elsif usr[:active]
-      usr[:cards].each do |card|
-        card.values.each { |val| prompt("You have: #{val[0]} and #{val}")}
-      end
-    end
+def busted?(cards)
+  total(cards) > 21
+end
+
+# :tie, :dealer, :player, :dealer_busted, :player_busted
+def detect_result(dealer_cards, player_cards)
+  player_total = total(player_cards)
+  dealer_total = total(dealer_cards)
+
+  if player_total > 21
+    :player_busted
+  elsif dealer_total > 21
+    :dealer_busted
+  elsif dealer_total < player_total
+    :player
+  elsif dealer_total > player_total
+    :dealer
+  else
+    :tie
   end
 end
 
-def deal_cards(dck, users)
-  users.each do |usr|
-    if usr[:initial_deal]
-      usr[:initial_deal]
-      2.times { select_card(dck, usr) }
-      usr[:initial_deal] = false
-    elsif usr[:active]
-      select_card(dck, usr)
-    end
-    usr
+def display_result(dealer_cards, player_cards)
+  result = detect_result(dealer_cards, player_cards)
+
+  case result
+  when :player_busted
+    prompt "You busted! Dealer wins!"
+  when :dealer_busted
+    prompt "Dealer busted! You win!"
+  when :player
+    prompt "You win!"
+  when :dealer
+    prompt "Dealer wins!"
+  when :tie
+    prompt "It's a tie!"
   end
 end
+
+def play_again?
+  puts "-------------"
+  prompt "Do you want to play again? (y or n)"
+  answer = gets.chomp
+  answer.downcase.start_with?('y')
+end
+
+loop do
+  prompt "Welcome to Twenty-One!"
+
+  # initialize vars
+  deck = initialize_deck
+  player_cards = []
+  dealer_cards = []
+
+  # initial deal
+  2.times do
+    player_cards << deck.pop
+    dealer_cards << deck.pop
+  end
+
+  prompt "Dealer has #{dealer_cards[0]} and ?"
+  prompt "You have: #{player_cards[0]} and #{player_cards[1]}, for a total of #{total(player_cards)}."
+
+  # player turn
+  loop do
+    player_turn = nil
+    loop do
+      prompt "Would you like to (h)it or (s)tay?"
+      player_turn = gets.chomp.downcase
+      break if ['h', 's'].include?(player_turn)
+      prompt "Sorry, must enter 'h' or 's'."
+    end
+
+    if player_turn == 'h'
+      player_cards << deck.pop
+      prompt "You chose to hit!"
+      prompt "Your cards are now: #{player_cards}"
+      prompt "Your total is now: #{total(player_cards)}"
+    end
+
+    break if player_turn == 's' || busted?(player_cards)
+  end
+
+  if busted?(player_cards)
+    display_result(dealer_cards, player_cards)
+    play_again? ? next : break
+  else
+    prompt "You stayed at #{total(player_cards)}"
+  end
+
+  # dealer turn
+  prompt "Dealer turn..."
+
+  loop do
+    break if total(dealer_cards) >= 17
+
+    prompt "Dealer hits!"
+    dealer_cards << deck.pop
+    prompt "Dealer's cards are now: #{dealer_cards}"
+  end
+
+  if busted?(dealer_cards)
+    prompt "Dealer total is now: #{total(dealer_cards)}"
+    display_result(dealer_cards, player_cards)
+    play_again? ? next : break
+  else
+    prompt "Dealer stays at #{total(dealer_cards)}"
+  end
+
+  # both player and dealer stays - compare cards!
+  puts "=============="
+  prompt "Dealer has #{dealer_cards}, for a total of: #{total(dealer_cards)}"
+  prompt "Player has #{player_cards}, for a total of: #{total(player_cards)}"
+  puts "=============="
+
+  display_result(dealer_cards, player_cards)
+
+  break unless play_again?
+end
+
+prompt "Thank you for playing Twenty-One! Good bye!"
 
 # START
 # the objective is for player to score 21 without going over. The player is allowed to see one card from the dealer
@@ -111,16 +181,4 @@ end
 #       bust
 #   back to check total
 # end
-
-# ==========================
-#    GAME LOOP
-# ==========================
-loop do
-  players = initialize_players
-  deck = initialize_deck(initialize_cards)
-  # select_card(deck)
-  deal_cards(deck, players)
-  display_cards(players)
-  break
-end
 
