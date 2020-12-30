@@ -1,0 +1,141 @@
+#! /usr/bin/env ruby
+
+require "pg"
+
+class ExpenseData
+  attr_accessor :connection
+
+  def initialize
+    @connection = PG.connect(dbname: "expense_proj")
+  end
+
+  def list_expenses
+    sql = "SELECT * from expenses ORDER BY created_on"
+    result = @connection.exec(sql)
+    display_count(result)
+    display_list(result)
+    display_total(result)
+  end
+
+  def add_expense(amount, memo)
+    if !amount && !memo
+      puts "Must enter an amount and a memo"
+      return
+    end
+    date = Date.today
+    sql = "INSERT INTO expenses (amount, memo, created_on) VALUES ($1, $2, $3)"
+    @connection.exec_params(sql, [amount, memo, date])
+    list_expenses
+  end
+
+  def search_expense term
+    sql = "SELECT * FROM expenses WHERE memo LIKE $1"
+    result = @connection.exec_params(sql, ["%#{term}%"])
+    display_count(result)
+    display_list(result)
+    display_total(result)
+  end
+
+  def delete_expense id
+    sql = "SELECT * FROM expenses WHERE id = $1"
+    d_sql = "DELETE FROM expenses WHERE id = $1"
+
+    result = @connection.exec_params(sql, id)
+    if !result.values.empty?
+      @connection.exec_params(d_sql, id)
+      puts "The follow expense has been deleted"
+      display_list(result)
+    else
+      puts "there is no expense with the id '#{id[0]}'"
+    end
+  end
+
+  def clr_expenses
+    @connection.exec("DELETE FROM expenses")
+    puts "All expenses have been deleted."
+  end
+
+  private
+  def display_list(list)
+    list.each do |tuple|
+      columns = [ tuple["id"].rjust(3),
+                  tuple["created_on"].rjust(10),
+                  tuple["amount"].rjust(12),
+                  tuple["memo"] ]
+
+      puts columns.join(" | ")
+    end
+  end
+
+  def display_count(expenses)
+    count = expenses.ntuples
+    if count == 0
+      puts "There are no expenses."
+    else
+      puts "There are #{count} expense#{"s" if count != 1}."
+    end
+  end
+
+  def display_total(list)
+    total = 0.00
+    list.each do |tuple|
+      total += tuple["amount"].to_f
+    end
+
+    puts "----------------------------------------------"
+    puts "Total\t\t\t  #{total}"
+  end
+
+end
+
+class CLI
+  def initialize
+    @app = ExpenseData.new()
+  end
+
+  def run(args)
+    command = args.shift
+    case command
+    when "add"
+      amount = args[0]
+      memo = args[1]
+      abort "You must provide an amount and memo." unless amount && memo
+      @app.add_expense(amount, memo)
+    when "list"
+      @app.list_expenses
+    when "search"
+      term = args[0]
+      @app.search_expense term
+    when "delete"
+      id = [args[0]]
+      @app.delete_expense id
+    when 'clear'
+      puts "This will remove all expenses. Are you sure? (y/n)"
+      response = $stdin.getch
+      @app.clr_expenses if response == "y"
+    else
+      display_help
+    end
+  end
+
+  def display_help
+    message = <<~DOC
+    An expense recording system
+  
+    Commands:
+      
+    add AMOUNT MEMO [DATE] - record a new expense
+    clear - delete all expenses
+    list - list all expenses
+    delete NUMBER - remove expense with id NUMBER
+    search QUERY - list expenses with a matching memo field
+    DOC
+
+    puts "#{message}"
+  end
+end
+
+CLI.new().run(ARGV)
+
+
+

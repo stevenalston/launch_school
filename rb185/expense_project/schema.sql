@@ -1,0 +1,6 @@
+CREATE TABLE expenses (
+id SERIAL PRIMARY KEY,
+amount DECIMAL(5, 2) NOT NULL,
+memo TEXT NOT NULL,
+created_on TIMESTAMP
+);
