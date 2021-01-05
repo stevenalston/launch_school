@@ -1,0 +1,15 @@
+<form action='/users/sign_in' method="post">
+  <section class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1">username</span>
+    </div>
+    <input type="text" class="form-control" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+  </section>
+  <section class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon2">password</span>
+    </div>
+    <input type="password" name="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2" value="<%= encrypt(params[:password]) %>">
+  </section>
+  <button type="submit" class="btn btn-primary btn-large mt-3">Sign In</button>
+</form>

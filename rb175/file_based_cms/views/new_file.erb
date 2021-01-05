@@ -1,0 +1,8 @@
+<form action='/create' method="post">
+  <section class="input-group mb-3">
+    <input type="text" name="filename" class="form-control" placeholder="File name" aria-label="File's name" aria-describedby="button-addon2" value="<%= params[:filename] || @filename %>">
+    <div class="input-group-append">
+      <button type="submit" class="btn btn-outline-secondary" id="file-submit">Create</button>
+    </div>
+  </section>
+</form>

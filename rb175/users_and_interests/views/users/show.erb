@@ -1,0 +1,13 @@
+<section class="col-6">
+
+  <h2><%= @name %></h2>
+    <div class="list-group">
+      <p class="text-muted list-group-item list-group-item-action">Email:
+        <a href="#" class=""><%= @interests[:email] %></a>
+      </p>
+      <p class="text-muted list-group-item list-group-item-action">Interests:
+        <a href="#" class=""><%= @interests[:interests].join(', ') %></a>
+      </p>
+
+    </div>
+</section>

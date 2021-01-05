@@ -48,3 +48,4 @@ p string_to_integer('4321') == 4321
 p string_to_integer('570') == 570
 
 p hex_to_integer('4D9f') == 19871
+

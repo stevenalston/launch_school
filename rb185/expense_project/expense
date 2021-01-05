@@ -7,6 +7,25 @@ class ExpenseData
 
   def initialize
     @connection = PG.connect(dbname: "expense_proj")
+    setup_schema
+  end
+
+  def setup_schema
+    result = @connection.exec <<~SQL
+      SELECT COUNT(*) FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = 'expenses';
+    SQL
+
+    if result[0]["count"] == "0"
+      @connection.exec <<~SQL
+        CREATE TABLE expenses (
+          id serial PRIMARY KEY,
+          amount numeric(6,2) NOT NULL CHECK (amount >= 0.01),
+          memo text NOT NULL,
+          created_on date NOT NULL
+        );
+      SQL
+    end
   end
 
   def list_expenses
@@ -82,7 +101,7 @@ class ExpenseData
       total += tuple["amount"].to_f
     end
 
-    puts "----------------------------------------------"
+    puts "-" * 50
     puts "Total\t\t\t  #{total}"
   end
 

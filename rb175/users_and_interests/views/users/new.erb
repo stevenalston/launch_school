@@ -1,0 +1,16 @@
+<section class="col">
+  <form method="post" action="/users/new">
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="name" name="name" aria-label="name" aria-describedby="basic-addon1" value="<%= params[:name] %>" />
+    </div>
+
+    <div class="input-group mb-3">
+      <input type="email" name="email" class="form-control" placeholder="Email" aria-label="email" aria-describedby="basic-addon2" value="<%= params[:email] %>" />
+    </div>
+
+    <div class="input-group mb-3">
+      <input type="text" name="interests" class="form-control" placeholder="Comma separated list" aria-label="Interest" aria-describedby="basic-addon2" value="<%= params[:interests] %>" />
+    </div>
+    <button class="btn btn-large">Submit</button>
+  <form>
+</section>

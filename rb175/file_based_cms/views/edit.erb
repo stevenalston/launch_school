@@ -1,0 +1,8 @@
+<section id="edit-document">
+  <h2>Editing <%= @filename %></h2>
+  <form action="/<%= @filename %>" method="post">
+    <textarea class="form-control" name="content" rows="20" cols="100"><%= @content %></textarea>
+    <br>
+    <button type="submit" class="btn btn-primary btn-large my-4">Update</button>
+  </form>
+</section>

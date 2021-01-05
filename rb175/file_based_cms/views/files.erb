@@ -1,0 +1,14 @@
+<ul id="files" class="list-group">
+  <% @filenames.each do |filename| %>
+    <li style="width: 45%" class="list-group-item d-flex justify-content-between">
+      <a href="/<%= filename %>"><%= filename %></a>
+      <div class="actions">
+        <a class="btn btn-warning" href="<%= filename %>/edit">edit</a>
+        <form class="d-inline-block" action="/<%= filename%>/destroy" method="post">
+          <button type="submit" class="btn btn-danger ml-2" href="<%= filename %>/destroy">delete</button>
+        </form>
+      </div>
+    </li>
+  <% end %>
+</ul>
+<a class="btn btn-primary btn-large mt-4" href='/new'>Create File</a>

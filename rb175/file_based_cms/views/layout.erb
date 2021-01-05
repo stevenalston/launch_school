@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <title>File-based CMS</title>
+</head>
+<body>
+  <header class="bg-dark text-white">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">File CMS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="nav nav-fill">
+          <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          <% if !session[:user] %>
+            <a class="nav-link" href="/users/sign_in">Sign In</a>
+          <% else %>
+            <a class="nav-link" href="/users/sign_out">Sign Out <%= session[:user][:username] %></a>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+  
+    <% if session[:user]%>
+      <h3 class="text-center mt-2 pb-2 display-5 mb-4">Signed in as <%= session[:user][:username]%></h3>
+    <% else %>
+      <h3 class="text-center mt-2 pb-2 display-5 mb-4">Welcome!</h3>
+    <% end %>
+
+    <% if session[:message] %>
+      <p class="bg-info p-3 text-light"><%= session.delete(:message) %></p>
+    <% end %>
+ 
+  </header>
+  <main class="pt-5">
+    <div class="container">
+      <%== yield %>
+    </div>
+  </main>
+</body>
+</html>
