@@ -1,0 +1,76 @@
+/*
+PROBLEM: 
+  Get the longest sentenct and word count for that sentence. Sentence are separated by '.', '?', or '!'
+  Everything is a word except spaces and sentence ending chars above
+EXAMPLES:
+  // console output
+  It is rather for us to be here dedicated to the great task remaining before us -- that from these honored dead we take increased devotion to that cause for which they gave the last full measure of devotion -- that we here highly resolve that these dead shall not have died in vain -- that this nation, under God, shall have a new birth of freedom -- and that government of the people, by the people, for the people, shall not perish from the earth.
+
+  The longest sentence has 86 words.
+
+  // Assuming the last sentence is removed:
+
+  longestSentence(longText);
+
+  // console output
+  Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty, and dedicated to the proposition that all men are created equal.
+
+  The longest sentence has 30 words.
+DATA:
+  Input(s): String
+  Output: String
+ALGORITHM:
+  START
+    SET sentences = split(regex)
+    SET = matches
+    WHILE sentences
+      SET words = sentence.match(regex)
+      PUSH words to matches
+    PRINT matches.length
+    PRINT matches.join()
+*/
+
+
+let longText = 'Four score and seven years ago our fathers brought forth' +
+  ' on this continent a new nation, conceived in liberty, and' +
+  ' dedicated to the proposition that all men are created' +
+  ' equal.' +
+  ' Now we are engaged in a great civil war, testing whether' +
+  ' that nation, or any nation so conceived and so dedicated,' +
+  ' can long endure. We are met on a great battlefield of that' +
+  ' war. We have come to dedicate a portion of that field, as' +
+  ' a final resting place for those who here gave their lives' +
+  ' that that nation might live. It is altogether fitting and' +
+  ' proper that we should do this.' +
+  ' But, in a larger sense, we can not dedicate, we can not' +
+  ' consecrate, we can not hallow this ground. The brave' +
+  ' men, living and dead, who struggled here, have' +
+  ' consecrated it, far above our poor power to add or' +
+  ' detract. The world will little note, nor long remember' +
+  ' what we say here, but it can never forget what they' +
+  ' did here. It is for us the living, rather, to be dedicated' +
+  ' here to the unfinished work which they who fought' +
+  ' here have thus far so nobly advanced. It is rather for' +
+  ' us to be here dedicated to the great task remaining' +
+  ' before us -- that from these honored dead we take' +
+  ' increased devotion to that cause for which they gave' +
+  ' the last full measure of devotion -- that we here highly' +
+  ' resolve that these dead shall not have died in vain' +
+  ' -- that this nation, under God, shall have a new birth' +
+  ' of freedom -- and that government of the people, by' +
+  ' the people, for the people, shall not perish from the' +
+  ' earth.';
+
+function longestSentence(text) {
+  const sentences = text.split(/[[\.]\s?|[\?]\s?|[\!]\s?]/);
+  const matches = sentences.filter(sentence => {
+    if (sentence) return sentence.match(/\b\w\b|-+[^ ]/gi);
+  }).sort((a, b) => a.length - b.length);
+
+  let longestSentence = matches.pop();
+
+  return `${longestSentence}\n\nThe longest sentence has ${longestSentence.split(' ').length} words.`
+}
+
+console.log(longestSentence(longText));
+
