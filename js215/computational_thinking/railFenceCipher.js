@@ -43,6 +43,11 @@ W . . . . . I . . . . . R . . . . . E . . . . . E
 . . A . E . . . C . V . . . D . L . . . T . N . .
 . . . R . . . . . O . . . . . F . . . . . O . . .
 
+3 rails, 'we are'?
+W . . . E
+. E . R .
+. . A . .
+
 DATA:
 Using 3 'rails' and the message "WE ARE DISCOVERED FLEE AT ONCE"
   Input(s) - Number -> RAILS, String -> characters
@@ -64,15 +69,59 @@ Using 3 'rails' and the message "WE ARE DISCOVERED FLEE AT ONCE"
 
   PATTERNS:
     the offest is equal to the index if one where to loop through the rails
-    The spaces between letters one line one is
+    if the letter above is at index 0, the letter below is at 1 if the next letter from line 1 is at
+    index 6, the letter below is at index 5
+    spaces = length / rails 
+    if char == start = railsIdx || char == end = spaces - railsIdx between the top row
+    else char == '. '
+    
+
 
 ALGORITHM
   takes to params: rails, inputString
   clean the inputString
   SET railLength = inputString.length
-  
-  WHILE offset < rails
+  SET spaces = (rails - 1) * 2
+  SET railIdx = 0
 
-
-
+  WHILE railIdx < rails
+    SET sumOfSpace = 0
+    WHILE strIdx < railLength
+      SET char = cleanedStr[strIdx]
+      IF strIdx == railIdx || strIdx == spaces - railIdx
+        PRINT char
+      ELSE
+        PRINT '. '
+      sumOfSpace += spaces
+    PRINT '/n'
+  END
+END
+3 rails, 'we are'?
+W . . . E
+. E . R .
+. . A . .
 */
+
+function railFenceCipher(rails, inputStr) {
+  let cleanStr = inputStr.replace(/\s/g, '').toUpperCase();
+  let result = '';
+
+  for (let railIdx = 0; railIdx < rails; railIdx += 1) {
+    let spaces = (rails - 1) * 2;
+
+    for(let strIdx = 0, n = cleanStr.length; strIdx < n; strIdx += 1) {
+      let letter = cleanStr[strIdx];
+      if (strIdx === railIdx || strIdx === spaces - railIdx) {
+        result += `${letter} `;
+      } else {
+        result += '. '
+      }
+      spaces += spaces
+    }
+    result += '\n';
+  }
+
+  return result;
+}
+
+console.log(railFenceCipher(3, 'we are discovered flee at once'));
