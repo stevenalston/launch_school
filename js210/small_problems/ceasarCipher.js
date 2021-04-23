@@ -103,3 +103,5 @@ console.log(caesarEncrypt('The quick brown fox jumps over the lazy dog!', 5));
 // many non-letters
 console.log(caesarEncrypt('There are, as you can see, many punctuations. Right?; Wrong?', 2));
 // "Vjgtg ctg, cu aqw ecp ugg, ocpa rwpevwcvkqpu. Tkijv?; Ytqpi?"
+
+module.exports = { caesarEncrypt }
