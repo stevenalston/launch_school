@@ -105,18 +105,18 @@ W . . . E
 function railFenceCipher(rails, inputStr) {
   let cleanStr = inputStr.replace(/\s/g, '').toUpperCase();
   let result = '';
+  let spaces = (rails - 1) * 2;
 
   for (let railIdx = 0; railIdx < rails; railIdx += 1) {
-    let spaces = (rails - 1) * 2;
 
     for(let strIdx = 0, n = cleanStr.length; strIdx < n; strIdx += 1) {
       let letter = cleanStr[strIdx];
-      if (strIdx === railIdx || strIdx === spaces - railIdx) {
+      if (strIdx === spaces + railIdx || strIdx === spaces - railIdx) {
         result += `${letter} `;
+        spaces += strIdx;
       } else {
-        result += '. '
+        result += '. ';
       }
-      spaces += spaces
     }
     result += '\n';
   }
